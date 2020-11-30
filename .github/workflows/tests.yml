@@ -13,8 +13,9 @@ jobs:
         os: [ubuntu-latest, macos-latest, windows-latest]
         php: ['7.3', '7.4', '8.0']
         dependency-version: [prefer-lowest, prefer-stable]
+        coverage-driver: [pcov, xdebug]
 
-    name: PHP ${{ matrix.php }} - ${{ matrix.os }} - ${{ matrix.dependency-version }}
+    name: PHP ${{ matrix.php }} - ${{ matrix.os }} - ${{ matrix.dependency-version }} - ${{ matrix.coverage-driver }}
 
     steps:
     - name: Checkout
@@ -25,7 +26,7 @@ jobs:
       with:
         php-version: ${{ matrix.php }}
         tools: composer:v2
-        coverage: none
+        coverage: ${{ matrix.coverage-driver }}
 
     - name: Setup Problem Matches
       run: |
@@ -41,4 +42,4 @@ jobs:
       if: "matrix.php >= 8"
 
     - name: Unit Tests
-      run: ./vendor/bin/pest --colors=always
+      run: ./vendor/bin/pest --colors=always --coverage
